@@ -24,19 +24,28 @@ const swaggerOptions: Options = {
         url: "http://localhost:3000",
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
   },
   apis: ["./src/**/*.ts"],
 };
 
-const swaggerDocs = swaggerJSDoc(swaggerOptions)
+const swaggerDocs = swaggerJSDoc(swaggerOptions);
 
 app.use(cors());
 app.use(express.json());
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(router);
 
-app.use(authRouter)
+app.use("/auth", authRouter);
 
 export default app;

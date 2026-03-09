@@ -1,7 +1,6 @@
 import * as authService from '../services/auth.service';
 import type { Request, Response } from 'express';
 
-
 export const register = async (req: Request, res: Response) => {
     try {
         const { name, email, password } = req.body;
@@ -37,6 +36,7 @@ export const getProfile = async (req: Request, res: Response) => {
         const user = await authService.getUserByEmail(req.userId!.email);
         res.json(user);
     } catch (error) {
+        console.log(error);
         res.status(400).json({ error: 'Failed to get user profile' });
     }
 }

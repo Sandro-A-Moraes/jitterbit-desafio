@@ -1,21 +1,43 @@
 import { prisma } from "../lib/prisma";
 
-export async function createUser(name: string, email: string, password: string) {
-    return prisma.user.create({
-        data: {
-            name,
-            email,
-            password
-        },        select: {
-            id: true,
-            name: true,
-            email: true
-        }
-    });
+export async function createUser(
+  name: string,
+  email: string,
+  password: string,
+) {
+  return prisma.user.create({
+    data: {
+      name,
+      email,
+      password,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+    },
+  });
 }
 
 export async function findUserByEmail(email: string) {
-    return prisma.user.findUnique({
-        where: { email }
-    });
+  return prisma.user.findUnique({
+    where: { email },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+    },
+  });
+}
+
+export async function findUserByEmailWithPassword(email: string) {
+  return prisma.user.findUnique({
+    where: { email },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      password: true,
+    },
+  });
 }
