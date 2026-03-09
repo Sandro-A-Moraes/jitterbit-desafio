@@ -31,3 +31,12 @@ export const login = async (req: Request, res: Response) => {
         res.status(400).json({ error: 'Failed to login user' });
     }
 }
+
+export const getProfile = async (req: Request, res: Response) => {
+    try {
+        const user = await authService.getUserByEmail(req.userId!.email);
+        res.json(user);
+    } catch (error) {
+        res.status(400).json({ error: 'Failed to get user profile' });
+    }
+}

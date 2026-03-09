@@ -28,4 +28,10 @@ export async function login(email: string, password: string){
 
 }
 
-
+export async function getUserByEmail(email: string) {
+    const user = await userRepository.findUserByEmail(email);
+    if (!user) {
+        throw new Error('User not found');
+    }
+    return user;
+}
