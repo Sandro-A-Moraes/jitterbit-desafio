@@ -2,6 +2,8 @@
 
 Simple and clean React frontend for the Order Management API with JWT authentication.
 
+> **Note:** This frontend was developed with AI assistance to expedite the development process, as it is not part of the main challenge scope. The backend implementation was developed manually without AI assistance.
+
 ## Features
 
 - **User Authentication** (Login/Register)
