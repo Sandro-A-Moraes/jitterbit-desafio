@@ -1,16 +1,17 @@
 # Order Management API
 
-A RESTful API built with **Node.js, Express, and TypeScript** for managing orders with full CRUD operations and automatic data transformation.
+A RESTful API built with **Node.js, Express, and TypeScript** for managing orders with full CRUD operations, JWT authentication, and automatic data transformation.
 
 ---
 
 # Overview
 
-This project implements an **Order Management API** that allows creating, retrieving, updating, and deleting orders.
+This project implements an **Order Management API** that allows creating, retrieving, updating, and deleting orders with secure user authentication.
 
 The API includes:
 
 - automatic payload transformation
+- **JWT-based authentication**
 - relational data persistence
 - clear separation of responsibilities (Controller → Service → Repository)
 - Swagger documentation
@@ -21,11 +22,13 @@ The API includes:
 # Features
 
 - Full **CRUD operations** for orders
+- **JWT authentication** with bcrypt password hashing
+- **Protected routes** with authentication middleware
 - Automatic **payload → database field mapping**
 - **Type-safe** architecture using TypeScript
 - **Prisma ORM** for database operations
 - **SQLite database**
-- **Swagger API documentation**
+- **Swagger API documentation** with Bearer token support
 - Structured project architecture
 - Proper **HTTP status codes**
 - Error handling
@@ -41,6 +44,7 @@ The API includes:
 | Framework       | Express.js        |
 | ORM             | Prisma            |
 | Database        | SQLite            |
+| Authentication  | JWT + bcrypt      |
 | Documentation   | Swagger (OpenAPI) |
 | Package Manager | npm               |
 
@@ -64,9 +68,36 @@ This interface allows you to:
 
 ---
 
+# Authentication
+
+The API uses **JWT (JSON Web Tokens)** for authentication.
+
+## How it works:
+
+1. **Register** a new user at `/auth/register`
+2. **Login** with credentials at `/auth/login` to receive a JWT token
+3. Include the token in the `Authorization` header for protected routes:
+   ```
+   Authorization: Bearer <your-token>
+   ```
+
+## Protected Routes
+
+Some endpoints require authentication. Use the Swagger UI **"Authorize"** button to test protected routes.
+
+---
+
 # API Endpoints
 
-## Required Endpoints
+## Authentication Endpoints
+
+| Method | Endpoint         | Description                 | Protected |
+| ------ | ---------------- | --------------------------- | --------- |
+| POST   | `/auth/register` | Register a new user         | No        |
+| POST   | `/auth/login`    | Login and receive JWT token | No        |
+| GET    | `/auth/profile`  | Get authenticated user info | Yes       |
+
+## Order Endpoints
 
 | Method | Endpoint     | Description        |
 | ------ | ------------ | ------------------ |
@@ -83,7 +114,45 @@ This interface allows you to:
 
 ---
 
-# Request Example
+# Request Examples
+
+## Register User
+
+```bash
+curl --location 'http://localhost:3000/auth/register' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "securepassword123"
+}'
+```
+
+## Login
+
+```bash
+curl --location 'http://localhost:3000/auth/login' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  "email": "john@example.com",
+  "password": "securepassword123"
+}'
+```
+
+Response:
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+## Get Profile (Protected)
+
+```bash
+curl --location 'http://localhost:3000/auth/profile' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+```
 
 ## Create Order
 
@@ -100,27 +169,6 @@ This interface allows you to:
     }
   ]
 }
-```
-
----
-
-# Example Request (cURL)
-
-```bash
-curl --location 'http://localhost:3000/order' \
---header 'Content-Type: application/json' \
---data '{
-  "numeroPedido": "v10089015vdb-01",
-  "valorTotal": 10000,
-  "dataCriacao": "2023-07-19T12:24:11.5299601+00:00",
-  "items": [
-    {
-      "idItem": "2434",
-      "quantidadeItem": 1,
-      "valorItem": 1000
-    }
-  ]
-}'
 ```
 
 ---
@@ -162,6 +210,15 @@ Incoming request fields are automatically transformed before being persisted in 
 # Database Schema
 
 The application uses **Prisma ORM with SQLite**.
+
+## User
+
+| Field    | Type        |
+| -------- | ----------- |
+| id       | String (PK) |
+| name     | String      |
+| email    | String      |
+| password | String      |
 
 ## Order
 
@@ -209,7 +266,10 @@ Create a `.env` file:
 ```
 DATABASE_URL="file:./dev.db"
 PORT=3000
+JWT_SECRET="your-secret-key-here"
 ```
+
+**Important**: Replace `your-secret-key-here` with a strong secret key for JWT signing.
 
 ---
 
@@ -253,14 +313,20 @@ http://localhost:3000/api-docs
 ```
 src
 ├── controllers
+│   ├── auth.controller.ts
 │   └── order.controller.ts
 ├── services
+│   ├── auth.service.ts
 │   └── order.service.ts
 ├── repositories
+│   ├── user.repository.ts
 │   └── order.repository.ts
+├── middlewares
+│   └── auth.middleware.ts
 ├── mappers
 │   └── order.mapper.ts
 ├── routes
+│   ├── authRoutes.ts
 │   └── orderRoutes.ts
 ├── types
 │   └── order.types.ts
@@ -284,8 +350,18 @@ The API uses proper HTTP status codes:
 | 200  | Successful request    |
 | 201  | Resource created      |
 | 400  | Invalid request       |
+| 401  | Unauthorized          |
 | 404  | Resource not found    |
 | 500  | Internal server error |
+
+---
+
+# Security
+
+- **Password Hashing**: User passwords are hashed using bcrypt with 10 salt rounds
+- **JWT Authentication**: Tokens expire after 1 hour for security
+- **Protected Routes**: Authentication middleware validates JWT on protected endpoints
+- **No Password Exposure**: User queries exclude password field from responses (except for authentication)
 
 ---
 
