@@ -1,49 +1,91 @@
 # Order Management API
 
-A RESTful API built with Node.js and TypeScript for managing orders with full CRUD operations support.
+A RESTful API built with **Node.js, Express, and TypeScript** for managing orders with full CRUD operations and automatic data transformation.
 
-## Overview
+---
 
-This API provides a comprehensive solution for order management, featuring automatic data transformation, relational database storage with PostgreSQL, and robust error handling.
+# Overview
 
-## Features
+This project implements an **Order Management API** that allows creating, retrieving, updating, and deleting orders.
 
-- Create, read, update, and delete orders
-- Automatic field mapping between input and database schemas
-- Type-safe implementation using TypeScript
-- Prisma ORM for database operations
-- Input validation and error handling
-- RESTful API design with appropriate HTTP status codes
+The API includes:
 
-## Technology Stack
+* automatic payload transformation
+* relational data persistence
+* clear separation of responsibilities (Controller → Service → Repository)
+* Swagger documentation
+* type-safe implementation using TypeScript
 
-- **Runtime**: Node.js
-- **Language**: TypeScript
-- **Framework**: Express.js
-- **ORM**: Prisma
-- **Database**: PostgreSQL
-- **Package Manager**: npm
+---
 
-## API Endpoints
+# Features
 
-### Required Endpoints
+* Full **CRUD operations** for orders
+* Automatic **payload → database field mapping**
+* **Type-safe** architecture using TypeScript
+* **Prisma ORM** for database operations
+* **SQLite database**
+* **Swagger API documentation**
+* Structured project architecture
+* Proper **HTTP status codes**
+* Error handling
 
-| Method | URL               | Description        |
-| ------ | ----------------- | ------------------ |
-| `POST` | `/order`          | Create a new order |
-| `GET`  | `/order/:orderId` | Get order by ID    |
+---
 
-### Optional Endpoints
+# Technology Stack
 
-| Method   | URL               | Description        |
-| -------- | ----------------- | ------------------ |
-| `GET`    | `/order/list`     | List all orders    |
-| `PUT`    | `/order/:orderId` | Update order by ID |
-| `DELETE` | `/order/:orderId` | Delete order by ID |
+| Layer           | Technology        |
+| --------------- | ----------------- |
+| Runtime         | Node.js           |
+| Language        | TypeScript        |
+| Framework       | Express.js        |
+| ORM             | Prisma            |
+| Database        | SQLite            |
+| Documentation   | Swagger (OpenAPI) |
+| Package Manager | npm               |
 
-## Request/Response Format
+---
 
-### Create Order Request
+# API Documentation
+
+Interactive API documentation is available using Swagger.
+
+After starting the server, open:
+
+```
+http://localhost:3000/api-docs
+```
+
+This interface allows you to:
+
+* explore endpoints
+* view request schemas
+* test API requests directly from the browser
+
+---
+
+# API Endpoints
+
+## Required Endpoints
+
+| Method | Endpoint     | Description        |
+| ------ | ------------ | ------------------ |
+| POST   | `/order`     | Create a new order |
+| GET    | `/order/:id` | Get order by ID    |
+
+## Optional Endpoints
+
+| Method | Endpoint      | Description     |
+| ------ | ------------- | --------------- |
+| GET    | `/order/list` | List all orders |
+| PUT    | `/order/:id`  | Update an order |
+| DELETE | `/order/:id`  | Delete an order |
+
+---
+
+# Request Example
+
+## Create Order
 
 ```json
 {
@@ -60,7 +102,9 @@ This API provides a comprehensive solution for order management, featuring autom
 }
 ```
 
-### Example using cURL
+---
+
+# Example Request (cURL)
 
 ```bash
 curl --location 'http://localhost:3000/order' \
@@ -79,20 +123,24 @@ curl --location 'http://localhost:3000/order' \
 }'
 ```
 
-## Data Transformation
+---
 
-The API automatically transforms incoming data fields to match the database schema:
+# Data Transformation
 
-| Input Field      | Database Field |
-| ---------------- | -------------- |
-| `numeroPedido`   | `orderId`      |
-| `valorTotal`     | `value`        |
-| `dataCriacao`    | `creationDate` |
-| `idItem`         | `productId`    |
-| `quantidadeItem` | `quantity`     |
-| `valorItem`      | `price`        |
+Incoming request fields are automatically transformed before being persisted in the database.
 
-### Transformed Data Example
+| Request Field  | Database Field |
+| -------------- | -------------- |
+| numeroPedido   | orderId        |
+| valorTotal     | value          |
+| dataCriacao    | creationDate   |
+| idItem         | productId      |
+| quantidadeItem | quantity       |
+| valorItem      | price          |
+
+---
+
+# Example of Transformed Data
 
 ```json
 {
@@ -109,135 +157,189 @@ The API automatically transforms incoming data fields to match the database sche
 }
 ```
 
-## Database Schema
+---
 
-### Order Table
+# Database Schema
 
-| Column         | Type         | Description             |
-| -------------- | ------------ | ----------------------- |
-| `orderId`      | VARCHAR (PK) | Unique order identifier |
-| `value`        | NUMERIC      | Total order value       |
-| `creationDate` | TIMESTAMP    | Order creation date     |
+The application uses **Prisma ORM with SQLite**.
 
-### Item Table
+## Order
 
-| Column      | Type         | Description        |
-| ----------- | ------------ | ------------------ |
-| `orderId`   | VARCHAR (FK) | Reference to order |
-| `productId` | INTEGER      | Product identifier |
-| `quantity`  | INTEGER      | Item quantity      |
-| `price`     | NUMERIC      | Item price         |
+| Field        | Type        |
+| ------------ | ----------- |
+| orderId      | String (PK) |
+| value        | Float       |
+| creationDate | DateTime    |
 
-## Installation
+## Item
 
-1. Clone the repository:
+| Field     | Type        |
+| --------- | ----------- |
+| id        | Int (PK)    |
+| orderId   | String (FK) |
+| productId | Int         |
+| quantity  | Int         |
+| price     | Float       |
+
+---
+
+# Installation
+
+### 1. Clone the repository
 
 ```bash
 git clone <repository-url>
-cd jitterbit-desafio
+cd order-management-api
 ```
 
-2. Navigate to the backend directory:
+---
 
-```bash
-cd backend
-```
-
-3. Install dependencies:
+### 2. Install dependencies
 
 ```bash
 npm install
 ```
 
-4. Set up your environment variables (create a `.env` file):
+---
 
-```env
-DATABASE_URL="postgresql://user:password@localhost:5432/orders_db"
+### 3. Configure environment variables
+
+Create a `.env` file:
+
+```
+DATABASE_URL="file:./dev.db"
 PORT=3000
 ```
 
-5. Run database migrations:
+---
+
+### 4. Run database migration
 
 ```bash
 npx prisma migrate dev
 ```
 
-6. Start the development server:
+---
+
+### 5. Start the development server
 
 ```bash
 npm run dev
 ```
 
-The API will be available at `http://localhost:3000`.
-
-## Project Structure
+The API will be available at:
 
 ```
-backend/
-├── prisma/
-│   ├── schema.prisma          # Database schema definition
-│   └── migrations/            # Database migrations
-├── src/
-│   ├── controllers/           # Request handlers
-│   ├── services/              # Business logic
-│   ├── repositories/          # Database operations
-│   ├── mappers/               # Data transformation
-│   ├── routes/                # API routes
-│   ├── types/                 # TypeScript type definitions
-│   ├── lib/                   # Shared utilities (Prisma client)
-│   ├── app.ts                 # Express app configuration
-│   └── server.ts              # Server entry point
-├── package.json
-└── tsconfig.json
+http://localhost:3000
 ```
 
-## Development
+Swagger documentation:
 
-### Available Scripts
+```
+http://localhost:3000/api-docs
+```
 
-- `npm run dev` - Start development server with hot reload
-- `npm run build` - Build for production
-- `npm start` - Start production server
-- `npx prisma studio` - Open Prisma Studio for database management
-- `npx prisma migrate dev` - Run database migrations
+---
 
-## Error Handling
+# Project Structure
 
-The API implements comprehensive error handling with appropriate HTTP status codes:
+```
+src
+├── controllers
+│   └── order.controller.ts
+├── services
+│   └── order.service.ts
+├── repositories
+│   └── order.repository.ts
+├── mappers
+│   └── order.mapper.ts
+├── routes
+│   └── orderRoutes.ts
+├── types
+│   └── order.types.ts
+├── lib
+│   └── prisma.ts
+├── app.ts
+└── server.ts
 
-- `200 OK` - Successful GET request
-- `201 Created` - Successful POST request
-- `400 Bad Request` - Invalid input data
-- `404 Not Found` - Resource not found
-- `500 Internal Server Error` - Server error
+prisma
+└── schema.prisma
+```
 
-## Evaluation Criteria
+---
+
+# Error Handling
+
+The API uses proper HTTP status codes:
+
+| Code | Meaning               |
+| ---- | --------------------- |
+| 200  | Successful request    |
+| 201  | Resource created      |
+| 400  | Invalid request       |
+| 404  | Resource not found    |
+| 500  | Internal server error |
+
+---
+
+# Available Scripts
+
+```bash
+npm run dev
+```
+
+Start development server with hot reload.
+
+```bash
+npm run build
+```
+
+Compile TypeScript.
+
+```bash
+npm start
+```
+
+Start production server.
+
+```bash
+npx prisma studio
+```
+
+Open database GUI.
+
+---
+
+# Evaluation Criteria Covered
 
 This project demonstrates:
 
-- Complete implementation of minimum requirements
-- Clean, organized, and well-commented code
-- Proper naming conventions and code structure
-- Robust error handling with clear messages
-- Correct HTTP status codes for each operation
-- Professional Git workflow with clear commit messages
+* Implementation of required endpoints
+* Clean architecture (Controller → Service → Repository)
+* Proper naming conventions
+* Robust error handling
+* Correct HTTP status codes
+* Swagger API documentation
+* Organized Git commit history
 
-## Future Enhancements
+---
 
-Potential improvements and features:
+# Possible Improvements
 
-- JWT authentication implementation
-- API documentation with Swagger/OpenAPI
-- Request rate limiting
-- Logging system
-- Unit and integration tests
-- Docker containerization
-- CI/CD pipeline
+Future enhancements could include:
 
-## License
+* JWT authentication
+* Request validation (Zod or Joi)
+* Unit and integration tests
+* Logging middleware
+* Rate limiting
+* Docker support
+* CI/CD pipeline
 
-This project is part of a technical challenge.
+---
 
-## Author
+# Author
 
-Developed as part of the Jitterbit technical assessment.
+Developed as part of the **Jitterbit Technical Challenge**.
+
+---
