@@ -37,6 +37,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 
 app.use(router);
 
-app.use(router)
+app.use(authRouter)
 
 export default app;
