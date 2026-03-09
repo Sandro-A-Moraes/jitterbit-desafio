@@ -58,4 +58,9 @@ export async function updateOrder(orderId: string, data: OrderDB) {
        }
     })
 }   
-   
+
+export async function deleteOrder(orderId: string) {
+    return prisma.order.delete({
+        where: { orderId }
+    })
+}
