@@ -19,8 +19,15 @@ export default function Login() {
       } else {
         await register(name, email, password);
       }
-    } catch {
-      setError(isLogin ? "Invalid credentials" : "Registration failed");
+    } catch (err) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : isLogin
+            ? "Invalid credentials"
+            : "Registration failed";
+      setError(message);
+      console.error("Auth error:", err);
     }
   };
 

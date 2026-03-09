@@ -1,4 +1,5 @@
 const API_URL = "http://localhost:3000";
+
 interface CreateOrderPayload {
   numeroPedido: string;
   valorTotal: number;
@@ -9,26 +10,55 @@ interface CreateOrderPayload {
     valorItem: number;
   }>;
 }
+
 // Auth API
 export const authApi = {
   async login(email: string, password: string) {
-    const response = await fetch(`${API_URL}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-    if (!response.ok) throw new Error("Login failed");
-    return response.json();
+    try {
+      const response = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      if (!response.ok) {
+        const error = await response
+          .json()
+          .catch(() => ({ error: "Login failed" }));
+        throw new Error(error.error || "Login failed");
+      }
+      return response.json();
+    } catch (err) {
+      if (err instanceof TypeError && err.message.includes("fetch")) {
+        throw new Error(
+          "Cannot connect to server. Is the backend running on port 3000?",
+        );
+      }
+      throw err;
+    }
   },
 
   async register(name: string, email: string, password: string) {
-    const response = await fetch(`${API_URL}/auth/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
-    });
-    if (!response.ok) throw new Error("Registration failed");
-    return response.json();
+    try {
+      const response = await fetch(`${API_URL}/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
+      if (!response.ok) {
+        const error = await response
+          .json()
+          .catch(() => ({ error: "Registration failed" }));
+        throw new Error(error.error || "Registration failed");
+      }
+      return response.json();
+    } catch (err) {
+      if (err instanceof TypeError && err.message.includes("fetch")) {
+        throw new Error(
+          "Cannot connect to server. Is the backend running on port 3000?",
+        );
+      }
+      throw err;
+    }
   },
 
   async getProfile(token: string) {
