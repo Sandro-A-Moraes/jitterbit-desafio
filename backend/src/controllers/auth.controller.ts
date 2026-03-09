@@ -1,42 +1,47 @@
-import * as authService from '../services/auth.service';
-import type { Request, Response } from 'express';
+import * as authService from "../services/auth.service";
+import type { Request, Response } from "express";
 
+// Handle user registration
 export const register = async (req: Request, res: Response) => {
-    try {
-        const { name, email, password } = req.body;
+  try {
+    const { name, email, password } = req.body;
 
-        if(!name || !email || !password) {
-            return res.status(400).json({ error: 'Name, email and password are required' });
-        }
-
-        const user = await authService.registerUser(name, email, password);
-        res.status(201).json(user);
-    } catch (error) {
-        res.status(400).json({ error: 'Failed to register user' });
+    if (!name || !email || !password) {
+      return res
+        .status(400)
+        .json({ error: "Name, email and password are required" });
     }
-}
 
+    const user = await authService.registerUser(name, email, password);
+    res.status(201).json(user);
+  } catch (error) {
+    res.status(400).json({ error: "Failed to register user" });
+  }
+};
+
+// Handle user login and JWT generation
 export const login = async (req: Request, res: Response) => {
-    try {
-        const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-        if(!email || !password) {
-            return res.status(400).json({ error: 'Email and password are required' });
-        }
-
-        const { token } = await authService.login(email, password);
-        res.json({ token });
-    } catch (error) {
-        res.status(400).json({ error: 'Failed to login user' });
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email and password are required" });
     }
-}
 
+    const { token } = await authService.login(email, password);
+    res.json({ token });
+  } catch (error) {
+    res.status(400).json({ error: "Failed to login user" });
+  }
+};
+
+// Get authenticated user profile
 export const getProfile = async (req: Request, res: Response) => {
-    try {
-        const user = await authService.getUserByEmail(req.userId!.email);
-        res.json(user);
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ error: 'Failed to get user profile' });
-    }
-}
+  try {
+    const user = await authService.getUserByEmail(req.userId!.email);
+    res.json(user);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error: "Failed to get user profile" });
+  }
+};

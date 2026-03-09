@@ -1,5 +1,6 @@
 import { prisma } from "../lib/prisma";
 
+// Create new user in database (excludes password from response)
 export async function createUser(
   name: string,
   email: string,
@@ -19,6 +20,7 @@ export async function createUser(
   });
 }
 
+// Find user by email (safe for public responses - no password)
 export async function findUserByEmail(email: string) {
   return prisma.user.findUnique({
     where: { email },
@@ -30,6 +32,7 @@ export async function findUserByEmail(email: string) {
   });
 }
 
+// Find user by email including password (only for authentication)
 export async function findUserByEmailWithPassword(email: string) {
   return prisma.user.findUnique({
     where: { email },

@@ -2,6 +2,7 @@ import * as userRepository from "../repositories/user.repository";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+// Register new user with hashed password
 export async function registerUser(
   name: string,
   email: string,
@@ -15,6 +16,7 @@ export async function registerUser(
   return userRepository.createUser(name, email, hashedPassword);
 }
 
+// Authenticate user and generate JWT token
 export async function login(email: string, password: string) {
   const user = await userRepository.findUserByEmailWithPassword(email);
 
@@ -33,6 +35,7 @@ export async function login(email: string, password: string) {
   return { token };
 }
 
+// Get user by email (without password)
 export async function getUserByEmail(email: string) {
   const user = await userRepository.findUserByEmail(email);
   if (!user) {
