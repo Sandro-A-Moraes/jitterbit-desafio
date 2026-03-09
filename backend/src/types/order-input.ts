@@ -10,3 +10,5 @@ export type OrderInput = {
     dataCriacao: string;
     items: ItemInput[];
 }
+
+//Input typing for payload 

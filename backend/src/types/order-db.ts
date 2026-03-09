@@ -10,3 +10,5 @@ export type OrderDB = {
   creationDate: Date
   items: ItemDB[]
 }
+
+//Output typing for the database.

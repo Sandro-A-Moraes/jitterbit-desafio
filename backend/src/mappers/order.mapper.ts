@@ -1,6 +1,10 @@
 import type { OrderInput } from '../types/order-input'
 import type { OrderDB } from '../types/order-db'
 
+//Payload mapping to database model
+
+//Input (payload) and output typing for the database.
+
 export function mapOrderInput(order: OrderInput): OrderDB {
     const { numeroPedido, valorTotal, dataCriacao, items } = order;
 
