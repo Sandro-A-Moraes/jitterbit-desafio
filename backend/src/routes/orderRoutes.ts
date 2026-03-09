@@ -1,28 +1,16 @@
 import {Router} from 'express'
+import * as orderController from '../controllers/order.controller'
 
 const router = Router()
 
-router.post('/order', (req, res)=>{
-    res.status(201).json({message: 'Order created successfully'})
-})
+router.post('/order', orderController.createOrder)
 
-router.get('/order/:id', (req, res)=>{
-    const orderId = req.params.id
-    res.json({message: `Order details for order ID: ${orderId}`})
-})
+router.get('/order/:id', orderController.getOrderById)
 
-router.get('/order/list', (req, res)=>{
-    res.json({message: 'List of all orders'})
-})
+router.get('/order/list', orderController.listOrders)
 
-router.put('/order/:id', (req, res)=>{
-    const orderId = req.params.id
-    res.json({message: `Order with ID: ${orderId} updated successfully`})
-})
+router.put('/order/:id', orderController.updateOrder)
 
-router.delete('/order/:id', (req, res)=>{
-    const orderId = req.params.id
-    res.json({message: `Order with ID: ${orderId} deleted successfully`})
-})
+router.delete('/order/:id', orderController.deleteOrder)
 
 export default router
