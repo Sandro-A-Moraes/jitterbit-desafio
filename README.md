@@ -10,25 +10,25 @@ This project implements an **Order Management API** that allows creating, retrie
 
 The API includes:
 
-* automatic payload transformation
-* relational data persistence
-* clear separation of responsibilities (Controller → Service → Repository)
-* Swagger documentation
-* type-safe implementation using TypeScript
+- automatic payload transformation
+- relational data persistence
+- clear separation of responsibilities (Controller → Service → Repository)
+- Swagger documentation
+- type-safe implementation using TypeScript
 
 ---
 
 # Features
 
-* Full **CRUD operations** for orders
-* Automatic **payload → database field mapping**
-* **Type-safe** architecture using TypeScript
-* **Prisma ORM** for database operations
-* **SQLite database**
-* **Swagger API documentation**
-* Structured project architecture
-* Proper **HTTP status codes**
-* Error handling
+- Full **CRUD operations** for orders
+- Automatic **payload → database field mapping**
+- **Type-safe** architecture using TypeScript
+- **Prisma ORM** for database operations
+- **SQLite database**
+- **Swagger API documentation**
+- Structured project architecture
+- Proper **HTTP status codes**
+- Error handling
 
 ---
 
@@ -58,9 +58,9 @@ http://localhost:3000/api-docs
 
 This interface allows you to:
 
-* explore endpoints
-* view request schemas
-* test API requests directly from the browser
+- explore endpoints
+- view request schemas
+- test API requests directly from the browser
 
 ---
 
@@ -219,6 +219,13 @@ PORT=3000
 npx prisma migrate dev
 ```
 
+`prisma migrate dev` already runs `prisma generate` automatically.
+If you only need to regenerate the client (for example, after pulling schema changes without creating a new migration), run:
+
+```bash
+npx prisma generate
+```
+
 ---
 
 ### 5. Start the development server
@@ -314,13 +321,13 @@ Open database GUI.
 
 This project demonstrates:
 
-* Implementation of required endpoints
-* Clean architecture (Controller → Service → Repository)
-* Proper naming conventions
-* Robust error handling
-* Correct HTTP status codes
-* Swagger API documentation
-* Organized Git commit history
+- Implementation of required endpoints
+- Clean architecture (Controller → Service → Repository)
+- Proper naming conventions
+- Robust error handling
+- Correct HTTP status codes
+- Swagger API documentation
+- Organized Git commit history
 
 ---
 
@@ -328,13 +335,13 @@ This project demonstrates:
 
 Future enhancements could include:
 
-* JWT authentication
-* Request validation (Zod or Joi)
-* Unit and integration tests
-* Logging middleware
-* Rate limiting
-* Docker support
-* CI/CD pipeline
+- JWT authentication
+- Request validation (Zod or Joi)
+- Unit and integration tests
+- Logging middleware
+- Rate limiting
+- Docker support
+- CI/CD pipeline
 
 ---
 
