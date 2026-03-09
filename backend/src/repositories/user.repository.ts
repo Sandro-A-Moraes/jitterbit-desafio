@@ -44,3 +44,15 @@ export async function findUserByEmailWithPassword(email: string) {
     },
   });
 }
+
+// Find user by ID (safe for public responses - no password)
+export async function findUserById(id: string) {
+  return prisma.user.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+    },
+  });
+}

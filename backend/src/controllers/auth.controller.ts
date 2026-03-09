@@ -15,7 +15,9 @@ export const register = async (req: Request, res: Response) => {
     const user = await authService.registerUser(name, email, password);
     res.status(201).json(user);
   } catch (error) {
-    res.status(400).json({ error: "Failed to register user" });
+    const message =
+      error instanceof Error ? error.message : "Failed to register user";
+    res.status(400).json({ error: message });
   }
 };
 
@@ -31,17 +33,25 @@ export const login = async (req: Request, res: Response) => {
     const { token } = await authService.login(email, password);
     res.json({ token });
   } catch (error) {
-    res.status(400).json({ error: "Failed to login user" });
+    const message =
+      error instanceof Error ? error.message : "Failed to login user";
+    res.status(400).json({ error: message });
   }
 };
 
 // Get authenticated user profile
 export const getProfile = async (req: Request, res: Response) => {
   try {
-    const user = await authService.getUserByEmail(req.userId!.email);
+    if (!req.userId?.userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const user = await authService.getUserById(req.userId.userId);
     res.json(user);
   } catch (error) {
-    console.log(error);
-    res.status(400).json({ error: "Failed to get user profile" });
+    const message =
+      error instanceof Error ? error.message : "Failed to get user profile";
+    console.error("Profile error:", error);
+    res.status(400).json({ error: message });
   }
 };

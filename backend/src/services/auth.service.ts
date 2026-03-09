@@ -43,3 +43,12 @@ export async function getUserByEmail(email: string) {
   }
   return user;
 }
+
+// Get user by ID (without password)
+export async function getUserById(id: string) {
+  const user = await userRepository.findUserById(id);
+  if (!user) {
+    throw new Error("User not found");
+  }
+  return user;
+}
